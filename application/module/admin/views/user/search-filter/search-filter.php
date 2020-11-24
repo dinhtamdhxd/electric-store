@@ -15,8 +15,11 @@ $totalInactive      =   $total - $totalActive;
 $inactiveStatus     =   HTML::cmsLinkStatus('Inactive', URL::createLink($this->module, $this->controller, $this->action, ['filter-status' => 0]), $totalInactive, $valueStatus);
 
 // SELECT BOX FILTER GROUP ACP
-$arrGroupName       =   ['default' => '-Select Group Name-', 1 => 'Admin', 2 => 'Member'];
-$slbGroupName       =   HTML::cmsSelectbox('filter_group-name', $arrGroupName, 'default', '', 'filter-group-name', 'width: unset');
+$arrGroupName       =   $this->arrGroupName;
+$arrGroupName['default']    =   '-Select Group Name-';
+ksort($arrGroupName);
+$keySelected        =   (isset($this->arrParam['filter-group-name'])) ? $this->arrParam['filter-group-name'] : 'default';
+$slbGroupName       =   HTML::cmsSelectbox('filter_group-name', $arrGroupName, $keySelected, '', 'filter-group-name', 'width: unset');
 //INPUT SEARCH
 $valueSearch        =   isset($this->arrParam['filter-search']) ? $this->arrParam['filter-search'] : '';
 $inputSearch        =   HTML::cmsInput('filter-search', 'search', $valueSearch, 'form-control-sm', 'min-width: 300px;', 'filter-search');
@@ -28,10 +31,12 @@ $btn_search         =  HTML::cmsButton('button', 'Search', 'info', 'btn-search')
 $keySearchBy        =   isset($this->arrParam['filter-by']) ? $this->arrParam['filter-by'] : 'all';
 $arrSearchBy        =   ['all' => 'All', 'id' => 'ID', 'username' => 'Username', 'email' => 'email'];
 $slbSearchBy        =   HTML::cmsSelectbox('filter-by', $arrSearchBy, $keySearchBy, '', 'filter-by', 'width: unset');
+
+$search_results     =   (isset($this->arrParam['filter-search']) || isset($this->arrParam['filter-group-name']) || isset($this->arrParam['filter-status']))? '<i class="text-info"> - có '.$this->totalSearch.' kết quả được tìm thấy!</i>' : '';
 ?>
 <div class="card card-info card-outline">
     <div class="card-header">
-        <h6 class="card-title">Search Filter</h6>
+        <h6 class="card-title">Search Filter<?php echo $search_results; ?></h6>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                 <i class="fas fa-minus"></i>

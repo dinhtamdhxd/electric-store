@@ -2,7 +2,6 @@
 <?php
     //LIST ITEMS
     $items              =   $this->items;
-   
     
     //SELECT BOX BULK ACTION 
     $arrBulk            =   ['default' => '-Bulk Action-', 'multy_active' => 'Multy Active', 'multy_inactive' => 'Multy Inactive', 'multy_delete' => 'Multy Delete'];
@@ -23,10 +22,12 @@
     $th_Status          =   HTML::sortLinkTable('Status', $column_sort, $linkSortStatus, $sort_icon);
     $th_GroupName       =   HTML::sortLinkTable('Group Name', $column_sort, $linkSortGroupName, $sort_icon);
     $th_Ordering        =   HTML::sortLinkTable('Ordering', $column_sort, $linkSortOrdering, $sort_icon);
-    $th_row             =   $th_ID. $th_Username. $th_GroupName. $th_Status. $th_Ordering;
+    $th_Avatar          =   '<th class="text-center">Avatar</th>';
+    $th_created         =   '<th class="text-center">Created</th>';
+    $th_modified        =   '<th class="text-center">Modified</th>';
+    $th_action          =   '<th class="text-center">Action</th>';
+    $th_row             =   $th_ID. $th_Username. $th_Avatar. $th_GroupName. $th_Status. $th_Ordering. $th_created. $th_modified. $th_action;
     
-    //ARRAY SEARCH BY
-    $arrSearchBy        =   ['username', 'email', 'id'];
     //TD LIST CONTENT
     $tbContentHtml              =   '';
     foreach($items as $value){
@@ -35,13 +36,15 @@
         $valueID                =   Helper::highlight($value['id'], $filter_search, 'id', $this->arrParam);
         $username               =   Helper::highlight($value['username'], $filter_search, 'username', $this->arrParam);
         $email                  =   Helper::highlight($value['email'], $filter_search, 'email', $this->arrParam);
+        $imgAvatar              =   (file_exists(HTD_PATH.$this->dirImgAvatar.'60x90-'.$value['avatar'])) ? $this->dirImgAvatar.'60x90-'.$value['avatar'] : $this->dirImgAvatar.'60x90-default.jpg';
+        $avatar                 =   '<img class="img-thumbnail" src="'.$imgAvatar.'" >';
         $linkChangeStatus       =   "javascript: changeAjaxState('".URL::createLink($this->module, $this->controller, 'changeAjaxState', ['task' => 'change-ajax-status', 'id' => $id, 'status' => $value['status']])."')";
         $statusIcon             =   ($value['status'] == 1) ? HTML::cmsIconState($linkChangeStatus) : HTML::cmsIconState($linkChangeStatus, 'danger', 'minus');     
-        // $linkChangeGroupName    =   "javascript: changeAjaxState('".URL::createLink($this->module, $this->controller, 'changeAjaxState', ['task' => 'change-ajax-group-acp', 'id' => $id, 'group_acp' => $value['group_acp']])."')";
-        $slbGroupName           =   HTML::cmsSelectbox('form[group-name]', $this->arrGroupName, $value['group_id'], null, null, 'width: unset;');         
+        $slbGroupName           =   HTML::cmsSelectbox('gnid[]', $this->arrGroupName, $value['group_id'], 'group-name', 'group-name-'.$id, 'width: unset;');         
         $ordering               =   HTML::cmsInput('ordering', 'number', $value['ordering'],'text-center m-auto', 'width: 65px;');
         $modified               =   HTML::cmsModified($value['modified'], $value['modified_by']);
         $linkTrash              =   "javascript: trash('".URL::createLink($this->module, $this->controller, 'trash', ['id' => $id])."')";
+        
         $tbContentHtml         .=   '<tr id="'.$id.'">
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
@@ -54,6 +57,7 @@
                                         <p class="mb-0"><i class="far fa-user"></i> '.$username.'</p>
                                         <p class="mb-0"><i class="far fa-envelope"></i> '.$email.'</p>
                                     </td>
+                                    <td class="text-center">'.$avatar.'</td>
                                     <td class="text-center group_name-'.$id.'" style="width: 130px">'.$slbGroupName.'</td>
                                     <td class="text-center status-'.$id.'">'.$statusIcon.'</td>
                                     <td class="text-center ordering-'.$id.'">'.$ordering.'</td>
@@ -102,9 +106,6 @@
                             </div>
                         </th>
                         <?php echo $th_row; ?>
-                        <th class="text-center">Created</th>
-                        <th class="text-center">Modified</th>
-                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>

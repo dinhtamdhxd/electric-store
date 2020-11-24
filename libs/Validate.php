@@ -17,7 +17,10 @@ class Validate{
 	public function __construct($source){
 		$this->source = $source;
 	}
-	
+	//Set source
+	public function setSource($element, $value){
+		$this->source[$element] = $value;
+	}
 	// Add rules
 	public function addRules($rules){
 		$this->rules = array_merge($rules, $this->rules );
@@ -55,7 +58,6 @@ class Validate{
 			
 			
 			if(($value['type'] != 'file' && $value['required'] == true && trim($this->source[$element])==null)){
-				
 				$this->setError($element, 'giá trị này không được rỗng!');
 			}else{
 				switch ($value['type']) {
@@ -248,8 +250,6 @@ class Validate{
 			if(in_array($ext, $options['extension']) == false){
 				$this->setError($element, 'phần mở rộng không phù hợp');
 			}
-		}else{
-			$this->setError($element, 'giá trị này không được rỗng!');
 		}
 	}
 }

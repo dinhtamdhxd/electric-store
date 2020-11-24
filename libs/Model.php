@@ -60,7 +60,7 @@ class Model{
 			foreach ($data as $value) {
 				$newQuery = $this->createInsertSQL($value);
 				$query = "INSERT INTO `$this->table`(" . $newQuery['cols'] . ") VALUES (" . $newQuery['vals'] . ")";
-				
+				die('function die() is called!');
 				$this->query($query);
 			}
 		}

@@ -111,7 +111,7 @@ class HTML
         $style                  =   ($style != null) ? 'style="' . $style . '"' : '';
         preg_match('#[a-z]+#imsu', $keySelected, $result);
         $numberKeySelected      =   (!empty($result)) ? true : false;
-        $xhtml                  =   '<select  ' . $style . $id . ' name="' . $name . '" class="custom-select custom-select-sm' . $class . '">';
+        $xhtml                  =   '<select  ' . $style . $id . ' name="' . $name . '" class="custom-select custom-select-sm ' . $class . '">';
         foreach ($arrData as $key => $value) {
             $flagKey    =   false;
             if ($numberKeySelected) {
@@ -182,9 +182,9 @@ class HTML
         return   $xhtml;
     }
     //CREATE ROW FORM
-    public static function cmsRowForm($name, $input, $required = false){
+    public static function cmsRowForm($name, $input, $required = false, $class= null ){
         $iconRequired   =   ($required) ? ' <span class="text-danger">*</span>' : '';
-        $xhtml  =   '<div class="form-group row">
+        $xhtml  =   '<div class="form-group row '.$class.'">
                         <label class="col-sm-2 col-form-label">'.$name.$iconRequired.'</label>
                         '.$input.'
                     </div>';
@@ -243,5 +243,21 @@ class HTML
     public static function cmsButton($type, $name, $class, $id = null){
         $id     =   ($id == null) ? '' : 'id="'.$id.'"';
        return $xhtml = '<button type="'.$type.'" class="btn btn-sm btn-'.$class.'" '.$id.'>'.$name.'</button>';
+    }
+
+    //INPUT FILE
+    public static function cmsInputFile($name, $id, $class = null, $value = null){
+        $value  =   ($value == null) ? '' : 'value="'.$value.'"';
+        $xhtml  =   '<div class="custom-file col-sm-10">
+                        <input type="file" name = "'.$name.'" class="custom-file-input '.$class.'" id="'.$id.'" '.$value.' >
+                        <label class="custom-file-label ml-2" for="'.$id.'">Choose file</label>
+                    </div>';
+      return $xhtml;
+    }
+
+    //IMG SHOW
+    public static function cmsImg($src, $class = null, $alt = null){
+        $alt    =   ($alt != null) ? 'alt="'.$alt.'"' : '';
+        return '<img src="'.$src.'" class="img-thumbnail '.$class.'" '.$alt.' >';
     }
 }

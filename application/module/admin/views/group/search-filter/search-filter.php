@@ -29,11 +29,11 @@ $btn_search         =  HTML::cmsButton('button', 'Search', 'info', 'btn-search')
 $keySearchBy        =   isset($this->arrParam['filter-by']) ? $this->arrParam['filter-by'] : 'all';
 $arrSearchBy        =   ['all' => 'All', 'id' => 'ID', 'name' => 'Name'];
 $slbSearchBy        =   HTML::cmsSelectbox('filter-by', $arrSearchBy, $keySearchBy, '', 'filter-by', 'width: unset');
-
+$search_results     =   (isset($this->arrParam['filter-search']) || isset($this->arrParam['filter-group-acp']) || isset($this->arrParam['filter-status']))? '<i class="text-info"> - có '.$this->totalSearch.' kết quả được tìm thấy!</i>' : '';
 ?>
 <div class="card card-info card-outline">
     <div class="card-header">
-        <h6 class="card-title">Search Filter</h6>
+        <h6 class="card-title">Search Filter <?php echo $search_results; ?></h6>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                 <i class="fas fa-minus"></i>

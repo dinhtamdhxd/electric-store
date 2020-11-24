@@ -24,7 +24,8 @@
             $this->_pagination              =   new Pagination($totalItems, $arrPagination);
             $this->_view->paginationHtml    =   $this->_pagination->showPagination();
             $this->_view->items             =   $this->_model->listItems($this->_arrParam);
-            $this->_view->arrParam  =   $this->_arrParam;
+            $this->_view->arrParam          =   $this->_arrParam;
+            $this->_view->totalSearch       =   $totalItems;
             $this->_view->render('index');
         }
 

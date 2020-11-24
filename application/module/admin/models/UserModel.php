@@ -35,10 +35,16 @@ class UserModel extends Model
             $status     =   $arrParam['filter-status'];
             $query[]    =   "AND `status` =  '$status' ";
         }
+
+        //FILTER GROUP NAME
+        if (isset($arrParam['filter-group-name'])) {
+            $group_id   =   $arrParam['filter-group-name'];
+            $query[]    =   "AND `group_id` =  '$group_id' ";
+        }
        
         //FILTER SORT
         if (isset($arrParam['sort_column'])) {
-            $sort_column    =   $arrParam['sort_column'];
+            $sort_column    =   ($arrParam['sort_column'] == 'group name') ? 'group_id' : $arrParam['sort_column'];
             $sort_by        =   $arrParam['sort_by'];
             $query[]        =   "ORDER BY `$sort_column` $sort_by ";
         }
@@ -50,7 +56,7 @@ class UserModel extends Model
         $query[]    =   "LIMIT $position,$length ";
 
 
-        $query  =   implode(" ", $query);
+        $query  =   implode(" ", $query); 
         return $this->fetchAll($query);
     }
 
@@ -81,6 +87,13 @@ class UserModel extends Model
             $status     =   $arrParam['filter-status'];
             $query[]    =   "AND `status` =  '$status' ";
         }
+
+        //FILTER GROUP NAME
+        if (isset($arrParam['filter-group-name'])) {
+            $group_id   =   $arrParam['filter-group-name'];
+            $query[]    =   "AND `group_id` =  '$group_id' ";
+        }
+        
         $query  =   implode(" ", $query);
         $result =   $this->fetchRow($query);
         return  $result['total'];
@@ -138,7 +151,7 @@ class UserModel extends Model
         $arrParam['form']['created']        =   date('Y-m-d', time());
         $arrParam['form']['created_by']     =   (Session::get('user'))['username'];
         $formData                           =   array_intersect_key($arrParam['form'], array_flip($this->columns));
-
+        
         if (isset($arrParam['form']['id'])) {
             $this->update($formData, [['id', $arrParam['form']['id'], '']]);
             $id     =   $arrParam['form']['id'];
@@ -176,5 +189,22 @@ class UserModel extends Model
         return $this->fetchPairs($query);
     }
 
-    
+    //GET PICTURE NAME FOR REMOVE
+    public function getPicturename($id){
+        $query  =   "SELECT `avatar` FROM `$this->table` WHERE `id` = '$id' ";
+        $result =   $this->fetchRow($query);
+        return $result['avatar'];
+    }
+
+    public function changeGroupName($arrParam){
+        $id             =   $arrParam['id'];
+        $group_id       =   $arrParam['group_id'];
+        $modified       =   date('Y-m-d', time());
+        $modified_by    =   (Session::get('user'))['username'];
+        $query          =   "UPDATE `$this->table` SET `group_id` = '$group_id', `modified` = '$modified', `modified_by` = '$modified_by' WHERE `id` = $id ";
+        $this->query($query);
+        $modifiedHTML   =   HTML::cmsModified($modified, $modified_by);
+        $result         =   ['id' => $id, 'name' => 'Group', 'modified' => $modifiedHTML];
+        return $result;
+    }
 }

@@ -5,24 +5,22 @@ class UserValidate extends Validate
     {
         if($checkExist){
             $username   =   $this->source['username'];
-            // $fullname   =   $this->source['fullname'];
             $email      =   $this->source['email'];
             $queryUsername  =   "SELECT * FROM `$database->table` WHERE `username` = '$username' ";
             $queryEmail     =   "SELECT * FROM `$database->table` WHERE `email` = '$email' ";
-            // $queryFullName  =   "SELECT * FROM `$database->table` WHERE `fullname` = '$fullname' ";
 
             $this   ->addRule('username', 'string-notExistRecord', ['database'=>$database, 'query' => $queryUsername, 'min' => 3 , 'max' => 100])
-                    // ->addRule('fullname', 'string-notExistRecord', ['database'=>$database, 'query' => $queryFullName])
                     ->addRule('email', 'email-notExistRecord', ['database'=>$database, 'query' => $queryEmail])
+                    ->addRule('avatar', 'file', ['extension' => ['jpg', 'png'], 'min' => 1000, 'max' => 100000000], false)
                     ->addRule('ordering', 'int', ['min' => 1 , 'max' => 100])
-                    ->addRule('group-name', 'status', ['deny' => ['default']])
+                    ->addRule('group_id', 'status', ['deny' => ['default']])
                     ->addRule('status', 'status', ['deny' => ['default']]);
         }else{
             $this   ->addRule('username', 'string', ['min' => 3 , 'max' => 100])
-                    // ->addRule('fullname', 'string', ['min' => 15 , 'max' => 100])
                     ->addRule('email', 'email')
+                    ->addRule('avatar', 'file', ['extension' => ['jpg', 'png'], 'min' => 1000, 'max' => 100000000], false)
                     ->addRule('ordering', 'int', ['min' => 1 , 'max' => 100])
-                    ->addRule('group-name', 'status', ['deny' => ['default']])
+                    ->addRule('group_id', 'status', ['deny' => ['default']])
                     ->addRule('status', 'status', ['deny' => ['default']]);
         }   
         

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.widget.bridge('uibutton', $.ui.button);
-
+    bsCustomFileInput.init();
     //CHECK ALL CHECKBOX
     $('#check-all').click(function (e) {
         let status = this.checked;
@@ -120,7 +120,55 @@ $(document).ready(function () {
         })
     });
 
-    
+    //CHANGE GROUPNAME
+    $('select.group-name').change(function(e){
+        var id     =   $(this).closest('tr').attr('id');
+        var group_id = $(this).val();
+        var url = window.location.href;
+        url = url.replace(/action=[^&]*/img, 'action=changeGroupName');
+        $.ajax({
+            url: url,
+            data: { id: id, group_id: group_id },
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (data) {
+                $('td.modified-' + data.id).html(data.modified);
+                $('#group-name-'+id).notify(
+                    data.name + " changged!", {
+                    position: "top center",
+                    className: "success",
+                    autoHideDelay: 2000
+                });
+            }
+        })
+    });
+
+    //SEARCH GROUP NAME
+    $('#filter-group-name').change(function (e) {
+        let exceptParams = ['filter-group-name'];
+        var link = createLink(exceptParams)
+        if($(this).val() != 'default'){
+            link +=  '&filter-group-name=' + $(this).val();
+        }
+        window.location.href = link;
+
+    });
+
+    // EVENT FILE UPLOAD UP
+    $('input[type=file]').change(function (e) {
+        _this   =   $(this);
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imgUpdate = '<img class="img-thumbnail mt-2" src="'+e.target.result+'" style="width: 80px; height: 110px; margin-left: 120px;">';
+                if(_this.closest('div').next().prop('tagName') == 'IMG') _this.closest('div').next().hide();
+                _this.closest('div').after(imgUpdate);
+            }
+
+            reader.readAsDataURL(this.files[0]); // convert to base64 string
+        }
+    });
 
     //SHOW AND UPDATE PRIVILEGE
     $(document).on('click', '.span-icon-privilege', function(e){
@@ -221,7 +269,8 @@ $(document).ready(function () {
         });
     })
 });
-
+ 
+//FUNCTION CREATE HTML FOR SWAL
 function swalCreateHTML(arrPrivilege, arrActive){
     var xhtml = '';
     var notice = '';

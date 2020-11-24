@@ -8,35 +8,37 @@
 
     //Input
     $inputUsername          =   HTML::cmsInputForm('form[username]', 'text', $username);
-    // $inputFullname          =   HTML::cmsInputForm('form[fullname]', 'text', $fullname);
     $inputEmail             =   HTML::cmsInputForm('form[email]', 'email', $email);
+    $inputAvatar            =   HTML::cmsInputFile('avatar', 'form-avatar');
     $inputOrdering          =   HTML::cmsInputForm('form[ordering]', 'number', $ordering);
     $inputToken             =   HTML::cmsInputHidden('form[token]', time());
 
     //Selectbox
-    $arrStatus          =   ['default' => '-Select Status-', 1 => 'Active', 0 => 'Inactive'];
-    $slbStatus          =   HTML::cmsSelectboxForm('form[status]', $arrStatus, $keyStatus);
+    $arrStatus              =   ['default' => '-Select Status-', 1 => 'Active', 0 => 'Inactive'];
+    $slbStatus              =   HTML::cmsSelectboxForm('form[status]', $arrStatus, $keyStatus);
 
     $arrGroupName               =   $this->arrGroupName;
     $arrGroupName['default']    =   '-Select Group Name-';
     ksort($arrGroupName); 
     $keyGroupName;
-    $slbGroupName               =   HTML::cmsSelectboxForm('form[group-name]', $arrGroupName, $keyGroupName);
+    $slbGroupName               =   HTML::cmsSelectboxForm('form[group_id]', $arrGroupName, $keyGroupName);
 
     //Row form
     $usernameRow        =   HTML::cmsRowForm('Username', $inputUsername);
-    // $fullnameRow        =   HTML::cmsRowForm('Fullname', $inputFullname);
     $emailRow           =   HTML::cmsRowForm('Email', $inputEmail);
     $statusRow          =   HTML::cmsRowForm('Status', $slbStatus);
     $groupNameRow       =   HTML::cmsRowForm('Group Name', $slbGroupName);
     $orderingRow        =   HTML::cmsRowForm('Ordering', $inputOrdering);
     $inputHiddenRow     =   $inputToken;
-    //InputHidden
+    $avatarShow         =   '';
     if(isset($this->arrParam['id'])){
-        $inputHiddenRow .=   HTML::cmsInputHidden('form[id]', $this->arrParam['id']);
+        $inputAvatar     =  HTML::cmsInputFile('avatar', 'form-avatar', null, $this->arrParam['form']['avatar']);
+        $avatarImg       =  HTML::cmsImg($this->srcAvatar, 'ml-2');
+        $avatarShow      =  HTML::cmsRowForm('', $avatarImg);
+        $inputHiddenRow .=  HTML::cmsInputHidden('form[id]', $this->arrParam['id']);
     }
-
-    $formTable      =   $usernameRow. $emailRow. $statusRow. $groupNameRow. $orderingRow. $inputHiddenRow;
+    $avatarRow          =   $avatarShow. HTML::cmsRowForm('Avatar', $inputAvatar, false, 'pr-2');
+    $formTable          =   $usernameRow. $emailRow. $avatarRow. $statusRow. $groupNameRow. $orderingRow. $inputHiddenRow;
 
     //Button
     $linkSave       =   URL::createLink($this->module, $this->controller, 'form', ['type' => 'save']);
@@ -56,11 +58,10 @@
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form class="form-horizontal" action="", method="POST" id="form-data">
+    <form class="form-horizontal" role="form" action="", method="POST" id="form-data" enctype="multipart/form-data">
         <div class="card-body">
             <?php echo $this->errors ?? ''; ?>
             <?php echo $formTable; ?>
-            
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
