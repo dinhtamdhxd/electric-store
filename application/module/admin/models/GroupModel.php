@@ -161,8 +161,13 @@ class GroupModel extends Model
 
     public function saveItem($arrParam)
     {
-        $arrParam['form']['created']        =   date('Y-m-d', time());
-        $arrParam['form']['created_by']     =   (Session::get('user'))['username'];
+        if(isset($arrParam['form']['id'])){
+            $arrParam['form']['modified']       =   date('Y-m-d', time());
+            $arrParam['form']['modified_by']    =   (Session::get('user'))['username'];
+        }else{
+            $arrParam['form']['created']        =   date('Y-m-d', time());
+            $arrParam['form']['created_by']     =   (Session::get('user'))['username'];
+        }
         $formData                           =   array_intersect_key($arrParam['form'], array_flip($this->columns));
 
         if (isset($arrParam['form']['id'])) {
@@ -181,15 +186,17 @@ class GroupModel extends Model
         return $this->fetchRow($query);
     }
 
-    public function changeOrdering($arrParam){
+    public function changeInput($arrParam){
         $id             =   $arrParam['id'];
-        $ordering       =   $arrParam['ordering'];
         $modified       =   date('Y-m-d', time());
         $modified_by    =   (Session::get('user'))['username'];
-        $query          =   "UPDATE `$this->table` SET `ordering` = '$ordering', `modified` = '$modified', `modified_by` = '$modified_by' WHERE `id` = $id ";
+        
+        $column_change  =   $arrParam['column_change'];
+        $valueUpdate    =   $arrParam[$column_change];
+        $query          =   "UPDATE `$this->table` SET `$column_change` = '$valueUpdate', `modified` = '$modified', `modified_by` = '$modified_by' WHERE `id` = $id ";
         $this->query($query);
         $modifiedHTML   =   HTML::cmsModified($modified, $modified_by);
-        $result         =   ['id' => $id, 'name' => 'ordering', 'modified' => $modifiedHTML];
+        $result         =   ['id' => $id, 'name' => $column_change, 'modified' => $modifiedHTML];
         return $result;
     }
 

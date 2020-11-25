@@ -36,7 +36,7 @@
         $valueID                =   Helper::highlight($value['id'], $filter_search, 'id', $this->arrParam);
         $username               =   Helper::highlight($value['username'], $filter_search, 'username', $this->arrParam);
         $email                  =   Helper::highlight($value['email'], $filter_search, 'email', $this->arrParam);
-        $imgAvatar              =   (file_exists(HTD_PATH.$this->dirImgAvatar.'60x90-'.$value['avatar'])) ? $this->dirImgAvatar.'60x90-'.$value['avatar'] : $this->dirImgAvatar.'60x90-default.jpg';
+        $imgAvatar              =   (file_exists(HTD_PATH.$this->dirImgAvatar.PIC_USER[2].$value['avatar'])) ? $this->dirImgAvatar.PIC_USER[2].$value['avatar'] : $this->dirImgAvatar.'60x90-default.jpg';
         $avatar                 =   '<img class="img-thumbnail" src="'.$imgAvatar.'" >';
         $linkChangeStatus       =   "javascript: changeAjaxState('".URL::createLink($this->module, $this->controller, 'changeAjaxState', ['task' => 'change-ajax-status', 'id' => $id, 'status' => $value['status']])."')";
         $statusIcon             =   ($value['status'] == 1) ? HTML::cmsIconState($linkChangeStatus) : HTML::cmsIconState($linkChangeStatus, 'danger', 'minus');     

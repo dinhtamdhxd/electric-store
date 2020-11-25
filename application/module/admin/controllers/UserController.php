@@ -42,7 +42,7 @@
                 $id                         =   $this->_arrParam['id'];
                 $infoUser                   =   $this->_model->infoItem($id);
                 $this->_arrParam['form']    =   $infoUser;
-                $this->_view->srcAvatar     = (file_exists(HTD_PATH.$dirImgAvatar.'60x90-'.$infoUser['avatar'])) ? $dirImgAvatar.'60x90-'.$infoUser['avatar'] : $dirImgAvatar.'60x90-default.jpg';
+                $this->_view->srcAvatar     = (file_exists(HTD_PATH.$dirImgAvatar.PIC_USER[2].$infoUser['avatar'])) ? $dirImgAvatar.PIC_USER[2].$infoUser['avatar'] : $dirImgAvatar.'60x90-default.jpg';
                 if(empty($this->_arrParam['form'])) URL::redirect($this->_module, $this->_controller, 'index');
             }
             if(isset($this->_arrParam['form']['token']) &&  $this->_arrParam['form']['token'] > 0){
@@ -51,6 +51,8 @@
                 if(isset($_FILES['avatar']) && $_FILES['avatar']['name'] != ''){
                     $this->_arrParam['form']['avatar'] = $_FILES['avatar'];
                     $this->_validate->setSource('avatar', $this->_arrParam['form']['avatar']);
+                }else{
+                    $this->_validate->setSource('avatar', null);
                 }
                 $checkExists                =   isset($this->_arrParam['form']['id']) ? false : true; 
                 $this->_validate->validate($this->_model, $checkExists);
@@ -62,8 +64,8 @@
                     if(isset($_FILES['avatar']) && $_FILES['avatar']['name'] != ''){
                         $avatarname =   $this->_model->getPicturename($this->_arrParam['form']['id']);
                         $uploadObj->removeFile($folderUpload, $avatarname);
-                        $uploadObj->removeFile($folderUpload, '60x90-'.$avatarname);
-                        $this->_arrParam['form']['avatar']  =   $uploadObj->uploadFile($fileUpload, $folderUpload);
+                        $uploadObj->removeFile($folderUpload, PIC_USER[2].$avatarname);
+                        $this->_arrParam['form']['avatar']  =   $uploadObj->uploadFile($fileUpload, $folderUpload, PIC_USER[0], PIC_USER[1]);
                     }
                     $id =   $this->_model->saveItem($this->_arrParam, ['task' => 'form']);
                     if($this->_arrParam['type'] == 'save') URL::redirect($this->_module, $this->_controller, 'form', ['id' => $id]);
@@ -120,13 +122,13 @@
             URL::redirect($this->_module, $this->_controller, 'index');
         }
 
-        public function changeOrderingAction(){
-            $result     =   $this->_model->changeOrdering($this->_arrParam);
+        public function changeInputAction(){
+            $result     =   $this->_model->changeInput($this->_arrParam);
             echo json_encode($result);
         }
 
-        public function changeGroupNameAction(){
-            $result     =   $this->_model->changeGroupName($this->_arrParam);
+        public function changeSelectAction(){
+            $result     =   $this->_model->changeSelect($this->_arrParam);
             echo json_encode($result);
         }
 

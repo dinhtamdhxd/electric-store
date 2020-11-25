@@ -31,6 +31,7 @@ $(document).ready(function () {
         let filter_by = $('#filter-by').val();
         let exceptParams = ['filter-search', 'filter-by'];
         let link = createLink(exceptParams);
+        link = link.replace(/&page=[^&]*/img, ''); 
         var url_filter_search   =   '';
         var url_filter_by       =   '';
         if(filter_search != ''){
@@ -99,13 +100,66 @@ $(document).ready(function () {
 
     //CHANGE ORDERING
     $('input[name=ordering]').change(function (e) {
+        var column_change =   'ordering';
         var ordering = $(this).val();
         var id = $(this).closest("tr").attr('id');
         var url = window.location.href;
-        url = url.replace(/action=[^&]*/img, 'action=changeOrdering');
+        url = url.replace(/action=[^&]*/img, 'action=changeInput');
         $.ajax({
             url: url,
-            data: { id: id, ordering: ordering },
+            data: { id: id, ordering: ordering, column_change: column_change},
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (data) {
+                $('td.modified-' + data.id).html(data.modified);
+                $('td.' + data.name + '-' + data.id + '> div').notify(
+                    data.name + " changged!", {
+                    position: "top center",
+                    className: "success",
+                    autoHideDelay: 2000
+                });
+            }
+        })
+    });
+
+    //CHANGE PRICE
+    $(document).on('change', 'input[name=price]', function (e) {
+        var column_change =   'price';
+        var price = $(this).val();
+        price   =   price.replaceAll(',', '');
+        var id = $(this).closest("tr").attr('id');
+        var url = window.location.href;
+        url = url.replace(/action=[^&]*/img, 'action=changeInput');
+        $.ajax({
+            url: url,
+            data: { id: id, price: price, column_change: column_change},
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (data) {
+                $('td.modified-' + data.id).html(data.modified);
+                $('td.price-'+data.id).html(data.price_tag);
+                $('td.' + data.name + '-' + data.id + '> div').notify(
+                    data.name + " changged!", {
+                    position: "top center",
+                    className: "success",
+                    autoHideDelay: 2000
+                });
+               
+                
+            }
+        })
+    });
+
+    //CHANGE SALEOFF
+    $('input[name=sale_off]').change(function (e) {
+        var column_change =   'sale_off';
+        var sale_off = $(this).val();
+        var id = $(this).closest("tr").attr('id');
+        var url = window.location.href;
+        url = url.replace(/action=[^&]*/img, 'action=changeInput');
+        $.ajax({
+            url: url,
+            data: { id: id, sale_off: sale_off, column_change: column_change},
             type: 'POST',
             dataType: 'JSON',
             success: function (data) {
@@ -122,18 +176,43 @@ $(document).ready(function () {
 
     //CHANGE GROUPNAME
     $('select.group-name').change(function(e){
+        var column_change =   'group_id';
         var id     =   $(this).closest('tr').attr('id');
         var group_id = $(this).val();
         var url = window.location.href;
-        url = url.replace(/action=[^&]*/img, 'action=changeGroupName');
+        url = url.replace(/action=[^&]*/img, 'action=changeSelect');
         $.ajax({
             url: url,
-            data: { id: id, group_id: group_id },
+            data: { id: id, group_id: group_id, column_change: column_change },
             type: 'POST',
             dataType: 'JSON',
             success: function (data) {
                 $('td.modified-' + data.id).html(data.modified);
                 $('#group-name-'+id).notify(
+                    data.name + " changged!", {
+                    position: "top center",
+                    className: "success",
+                    autoHideDelay: 2000
+                });
+            }
+        })
+    });
+
+    //CHANGE GROUPCATEGORY
+    $('select.group-category').change(function(e){
+        var column_change =   'category_id';
+        var id     =   $(this).closest('tr').attr('id');
+        var category_id = $(this).val();
+        var url = window.location.href;
+        url = url.replace(/action=[^&]*/img, 'action=changeSelect');
+        $.ajax({
+            url: url,
+            data: { id: id, category_id: category_id, column_change: column_change },
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (data) {
+                $('td.modified-' + data.id).html(data.modified);
+                $('#group-category-'+id).notify(
                     data.name + " changged!", {
                     position: "top center",
                     className: "success",
@@ -154,6 +233,17 @@ $(document).ready(function () {
 
     });
 
+     //SEARCH GROUP CATEGORY
+     $('#filter-group-category').change(function (e) {
+        let exceptParams = ['filter-group-category'];
+        var link = createLink(exceptParams)
+        if($(this).val() != 'default'){
+            link +=  '&filter-group-category=' + $(this).val();
+        }
+        window.location.href = link;
+
+    });
+
     // EVENT FILE UPLOAD UP
     $('input[type=file]').change(function (e) {
         _this   =   $(this);
@@ -161,7 +251,7 @@ $(document).ready(function () {
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                imgUpdate = '<img class="img-thumbnail mt-2" src="'+e.target.result+'" style="width: 80px; height: 110px; margin-left: 120px;">';
+                imgUpdate = '<img class="img-thumbnail mt-2" src="'+e.target.result+'" style="width: ' + (IMG_SIZE.width +10) + 'px; height: ' + (IMG_SIZE.height +10) + 'px; margin-left: 120px;">';
                 if(_this.closest('div').next().prop('tagName') == 'IMG') _this.closest('div').next().hide();
                 _this.closest('div').after(imgUpdate);
             }

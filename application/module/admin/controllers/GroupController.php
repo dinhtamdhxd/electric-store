@@ -91,8 +91,8 @@
             URL::redirect($this->_module, $this->_controller, 'index');
         }
 
-        public function changeOrderingAction(){
-            $result     =   $this->_model->changeOrdering($this->_arrParam);
+        public function changeInputAction(){
+            $result     =   $this->_model->changeInput($this->_arrParam);
             echo json_encode($result);
         }
 

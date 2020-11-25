@@ -41,6 +41,7 @@
     define('TBE_PHONE', 'phone');
     define('TBE_TABLET', 'tablet');
     define('TBE_COMPUTER', 'computer');
+    define('TBE_SLIDER', 'slider');
     
     // DEFAULT VALUE
     define('DEFAULT_MODULE', 'admin');
@@ -52,8 +53,11 @@
     define('PRIVILEGE_LEVEL2', ['1', '2', '3', '4', '6', '7', '10']);
     define('PRIVILEGE_LEVEL3', ['2', '4']);
     
-    
-    
+    // DEFINE SIZE PICTURE
+    define('PIC_USER', [60,90,'60x90-']);
+    define('PIC_CATEGORY', [100,100,'100x100-']);
+    define('PIC_SLIDER', [100,100,'100x100-']);
+    define('PIC_PHONE', [100,100,'100x100-']);
     
     
     

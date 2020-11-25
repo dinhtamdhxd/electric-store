@@ -216,8 +216,11 @@ class HTML
 
     //MODIFIED
     public static function cmsModified($modified, $modified_by){
-        $xhtml  =   '<p class="mb-0 history-by"><i class="far fa-user"></i> '.$modified_by.'</p>
-                    <p class="mb-0 history-time"><i class="far fa-clock"></i> '.$modified.'</p>';
+        $xhtml  =   'None';
+        if($modified_by != null){
+            $xhtml  =   '<p class="mb-0 history-by"><i class="far fa-user"></i> '.$modified_by.'</p>
+                        <p class="mb-0 history-time"><i class="far fa-clock"></i> '.$modified.'</p>';
+        }
         return $xhtml;
     }
 
@@ -259,5 +262,35 @@ class HTML
     public static function cmsImg($src, $class = null, $alt = null){
         $alt    =   ($alt != null) ? 'alt="'.$alt.'"' : '';
         return '<img src="'.$src.'" class="img-thumbnail '.$class.'" '.$alt.' >';
+    }
+
+    //CREATE AS P TAG
+    public static function createPtag($content, $p_class, $icon = false, $i_class = null){
+        $icon_tag       =   ' ';
+        if($icon){
+            $icon_tag   =   '<i class="fa fas far fa-'.$i_class.'"></i> ';
+        }
+        $xhtml  =   '<p class="'.$p_class.'">'.$icon_tag.$content.'</p>';
+        return $xhtml;
+    }
+
+    //CREATE AS A LINK
+    public static function createAlink($link, $a_class, $content = null, $icon = false, $i_class = null){
+        $icon_tag       =   '';
+        if($icon){
+            $icon_tag   =   '<i class="fa fas far fa-'.$i_class.'"></i>';
+        }
+        $xhtml  =   $icon_tag.'<a class="'.$a_class.'" href="'.$link.'"> '.$content.'</p>';
+        return $xhtml;
+    }
+
+    //CREATE AS TEXT AREA
+    public static function cmsTextAreaForm($name, $class, $value = null, $id = null, $row = 3, $style = null){
+        $id     =   ($id != null) ? ' id="'.$id.'"' : '';
+        $style  =   ($style != null) ? ' style="'.$style.'"' : '';
+        $xhtml  =   '<div class="col-sm-10">
+                        <textarea class="form-control '.$class.'" rows="'.$row.'" name="'.$name.'" '.$id.$style.'>'.$value.'</textarea>
+                    </div>';
+        return $xhtml;
     }
 }

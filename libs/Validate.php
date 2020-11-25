@@ -56,8 +56,7 @@ class Validate{
 	public function run(){
 		foreach($this->rules as $element => $value){
 			
-			
-			if(($value['type'] != 'file' && $value['required'] == true && trim($this->source[$element])==null)){
+			if($value['required'] == true && trim($this->source[$element])==null){
 				$this->setError($element, 'giá trị này không được rỗng!');
 			}else{
 				switch ($value['type']) {
@@ -241,7 +240,7 @@ class Validate{
 	
 	// Validate File
 	private function validateFile($element, $options){
-		if($this->source[$element]['name'] != null){
+		if(isset($this->source[$element]['name']) &&  $this->source[$element]['name'] != null){
 			if(!filter_var($this->source[$element]['size'], FILTER_VALIDATE_INT, array("options"=>array("min_range"=>$options['min'],"max_range"=>$options['max'])))){
 				$this->setError($element, 'kích thước không phù hợp');
 			}
